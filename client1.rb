@@ -7,6 +7,6 @@ ts = 0
 
 loop do
   sleep(rand(5))
+  ts+=5
   TCPSocket.open("localhost", 2000).puts(JSON.generate({action: 'insert', ts: ts}))
-  ts+=1
 end

@@ -17,6 +17,7 @@ loop do
     msg = JSON.parse(conn.gets)
     actions.push({action: msg['action'], timestamp: msg['ts']})
     ts = [ts, msg['ts']].max + 1
+    puts "#{ts} =>> #{msg['action']}"
   end
   
   iterator+=1
