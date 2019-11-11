@@ -11,13 +11,15 @@ iterator = 0
 ts = 0
 
 loop do
-  break if iterator > 10
+  break if iterator > 15
 
   Thread.start(server.accept) do |conn|
     msg = JSON.parse(conn.gets)
     actions.push({action: msg['action'], timestamp: msg['ts']})
     ts = [ts, msg['ts']].max + 1
     puts "#{ts} =>> #{msg['action']}"
+
+    conn.puts ts
   end
   
   iterator+=1
