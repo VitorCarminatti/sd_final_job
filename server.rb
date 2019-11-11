@@ -7,11 +7,9 @@ server = TCPServer.open("localhost", 2000)
 
 actions = []
 
-iterator = 0
 ts = 0
 
-loop do
-  break if iterator > 15
+17.times do
 
   Thread.start(server.accept) do |conn|
     msg = JSON.parse(conn.gets)
@@ -22,7 +20,6 @@ loop do
     conn.puts ts
   end
   
-  iterator+=1
 end
 
 puts actions
