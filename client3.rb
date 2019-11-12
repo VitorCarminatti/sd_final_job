@@ -23,7 +23,7 @@ loop do
   socket = TCPSocket.open("localhost", 2000)
   sleep(rand(5))
   ts += getHour()
-  socket.puts(JSON.generate({ action: "client3", ts: ts }))
+  socket.puts(JSON.generate({ client: "client3", ts: ts }))
 
   server_ts = socket.gets.chomp
   ts = [ts, server_ts.to_i].max + 1

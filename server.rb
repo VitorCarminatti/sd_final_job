@@ -22,9 +22,9 @@ end
 
 17.times do
   Thread.start(server.accept) do |conn|
+    
     msg = JSON.parse(conn.gets)
     sleep(5)
-    actions.push({ action: msg["action"], timestamp: msg["ts"] })
 
     if msg["ts"] < ts
       blink(led1)
@@ -33,7 +33,13 @@ end
     end
 
     ts = [ts, msg["ts"]].max + 1
-    puts "#{ts} =>> #{msg["action"]}"
+    actions.push({ client: msg["client"], timestamp: msg["ts"], server_ts: ts })
+    
+    open("./timestamp-monitor/src/data_report.json", "w") { |f|
+      f.puts JSON.generate(actions)
+    }
+
+    puts "#{ts} =>> #{msg["client"]}"
 
     conn.puts ts
   end
@@ -41,7 +47,3 @@ end
 
 puts actions
 puts ts
-
-open("myfile.out", "w") { |f|
-  f.puts JSON.generate(actions)
-}
