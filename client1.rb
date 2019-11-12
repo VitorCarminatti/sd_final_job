@@ -1,6 +1,6 @@
 def getHour()
-  require 'net/http'
-  require 'date'
+  require "net/http"
+  require "date"
 
   uri = URI("http://worldtimeapi.org/api/timezone/America/Sao_Paulo")
 
@@ -23,8 +23,8 @@ loop do
   socket = TCPSocket.open("localhost", 2000)
   sleep(rand(5))
   ts += getHour()
-  socket.puts(JSON.generate({action: 'insert', ts: ts}))
-  
+  socket.puts(JSON.generate({ action: "client1", ts: ts }))
+
   server_ts = socket.gets.chomp
   ts = [ts, server_ts.to_i].max + 1
 
