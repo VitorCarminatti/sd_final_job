@@ -15,7 +15,19 @@ function App() {
   const [client2Ts, setClient2Ts] = useState(0);
   const [client3Ts, setClient3Ts] = useState(0);
 
-  useEffect(() => {
+  const verifyNullMonitors = (client1, client2, client3) => {
+    !client1 ? setClient1Ts(0) : console.log("Tem Valor");
+    !client2 ? setClient2Ts(0) : console.log("Tem Valor");
+    !client3 ? setClient3Ts(0) : console.log("Tem Valor");
+  };
+
+  const populateMonitors = data => {
+    const client1Null = data.find(item => item.client === "client1");
+    const client2Null = data.find(item => item.client === "client2");
+    const client3Null = data.find(item => item.client === "client3");
+
+    verifyNullMonitors(client1Null, client2Null, client3Null);
+
     data.map(item => {
       switch (item.client) {
         case "client1": {
@@ -36,6 +48,16 @@ function App() {
       }
       setServerTs(item.server_ts);
     });
+  };
+
+  const rollbackState = (data, index) => {
+    const newData = data.slice(0, index + 1);
+
+    populateMonitors(newData);
+  };
+
+  useEffect(() => {
+    populateMonitors(data);
   }, []);
 
   return (
@@ -53,7 +75,7 @@ function App() {
       </ClientMonitorWrapper>
 
       <ListWrapper>
-        <LogList data={data} />
+        <LogList data={data} rollbackState={rollbackState} />
       </ListWrapper>
     </div>
   );
