@@ -15,18 +15,22 @@ def getHour()
 end
 
 puts "Client node 1 \n"
-puts "Type K to stop the client at any moment \n"
+puts "Type 'K' to kill the client at any moment \n"
 
-ts = 0
+ts = 1
 kill = ''
-socket2 = TCPSocket.open("localhost", 2000)
+
+socketIni = TCPSocket.open("localhost", 2000)
+socketIni.puts(JSON.generate({ client: "client1", ts: ts, alive: true, started: true }))
+
+socketFim = TCPSocket.open("localhost", 2000)
 
 loop do
   socket = TCPSocket.open("localhost", 2000)
   
   sleep(rand(5))
   ts += getHour()
-  socket.puts(JSON.generate({ client: "client1", ts: ts, alive: true }))
+  socket.puts(JSON.generate({ client: "client1", ts: ts, alive: true, started: false }))
 
   server_ts = socket.gets.chomp
   ts = [ts, server_ts.to_i].max + 1
@@ -39,7 +43,7 @@ loop do
   end
 
   if kill == 'K'
-    socket2.puts(JSON.generate({ client: "client1", ts: ts, alive: false }))
+    socketFim.puts(JSON.generate({ client: "client1", ts: ts, alive: false, started: false }))
     break
   end
 end
